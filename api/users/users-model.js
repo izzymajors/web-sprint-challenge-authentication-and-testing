@@ -6,7 +6,7 @@ function find() {
     .select("u.id","u.username")
 }
 
-function add(user) {
+async function add(user) {
     const [id] = await db("users").insert(user, "id");
     return findById(id);
 }
