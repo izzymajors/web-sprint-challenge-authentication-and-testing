@@ -1,10 +1,10 @@
 const bcryptjs = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const router = require('express').Router();
-// const { jwtSecret } = require('../../config/secrets');
+const { jwtSecret } = require('../config/secrets');
 
-const Jokes = require("../jokes/jokes-data")
-const { isValid } = require("../jokes/joke-service")
+const  Users = require("../users/users-model");
+const { isValid } = require("../jokes/joke-service");
 
 router.post('/register', (req, res) => {
   const credentials = req.body;
@@ -17,7 +17,17 @@ router.post('/register', (req, res) => {
 
     credentials.password = hash;
 
-    
+    Users.add(credentials)
+    .then(user => {
+      res.status(201).json({ data: user });
+    })
+    .catch(error => {
+      res.status(500).json({ message: error.message });
+    })
+  } else {
+    res.status(400).json({
+      message: "please provide username and password"
+    })
   }
   /*
     IMPLEMENT
