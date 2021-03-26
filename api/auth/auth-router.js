@@ -1,7 +1,24 @@
+const bcryptjs = require("bcryptjs");
+const jwt = require('jsonwebtoken');
 const router = require('express').Router();
+// const { jwtSecret } = require('../../config/secrets');
+
+const Jokes = require("../jokes/jokes-data")
+const { isValid } = require("../jokes/joke-service")
 
 router.post('/register', (req, res) => {
-  res.end('implement register, please!');
+  const credentials = req.body;
+
+  if (isValid(credentials)) {
+    const rounds = process.env.BCRYPT_ROUNDS || 8;
+    
+    //hashing password
+    const hash = bcryptjs.hashSync(credentials.password, rounds);
+
+    credentials.password = hash;
+
+    
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
